@@ -19,9 +19,6 @@
       (let ((v (read-line (process-output gtk-proc) nil nil)))
 	v)))
 
-  (load "gtk-funcs.l")
-  (load "gtk-enums.l")
-  
   (defun show-gtk-proc ()
     (print gtk-proc))
 
