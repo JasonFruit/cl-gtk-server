@@ -44,7 +44,7 @@ Example usage
 
 ### Simple window example
 
-```lisp
+```Common Lisp
 (asdf:load-system :cl-gtk-server)
 
 ;; start the GTK server process
