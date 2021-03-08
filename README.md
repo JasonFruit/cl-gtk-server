@@ -16,7 +16,7 @@ Limitations
 ----------------------------------------------------------------------
 
  - Works only on Linux
- - Works only with SBCL
+ - Does not work with (at least) Clisp; tested only with SBCL and ECL
  - Complete only for GTK functions and enumerations; requires
    constructing string commands to use Gdk, Pango, Cairo, etc.
    
