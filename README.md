@@ -11,6 +11,20 @@ Features
  - Some accessory functions for exploratory programming:
    - `<function-name>-args`: shows argument names and types for <function-name>
    - `<enum-name>-keys: shows keywords for <enum-name>
+   
+Limitations
+----------------------------------------------------------------------
+
+ - Works only on Linux
+ - Works only with SBCL
+ - Complete only for GTK functions and enumerations; requires
+   constructing string commands to use Gdk, Pango, Cairo, etc.
+   
+Getting started
+----------------------------------------------------------------------
+
+ - Install [GTK-Server](http://gtk-server.org/)
+ - Clone this repository somewhere on your ASDF source registry path
 
 Example usage
 ----------------------------------------------------------------------
@@ -69,3 +83,4 @@ Example usage
 	  ;; start the event loop
 	  (main-loop))
 
+More examples are located in the `examples` directory.
