@@ -30,7 +30,7 @@
     (setq gtk-continue-main-loop nil))
 
   (defun start-gtk ()
-    (setf gtk-proc (uiop:launch-program (list "/usr/local/bin/gtk-server" "-stdin")
+    (setf gtk-proc (uiop:launch-program (list "gtk-server" "-stdin")
 					:input :stream
 					:output :stream))
     (gtk "gtk_init" nil nil))
@@ -39,6 +39,19 @@
     
     (defun bind-default (widget action)
       (push (cons widget action) widget-actions))
+
+    (defun bind-keypress (widget action)
+      (let ((key (concatenate 'string
+			      widget
+			      "-"
+			      "key-press-event")))
+	(push (cons key (lambda ()
+			  (funcall action (gtk "gtk_server_key"))))
+	      widget-actions)
+	(gtk "gtk_server_connect"
+	     widget
+	     "key-press-event"
+	     key)))
 
     (defun bind (widget signal action)
       (let ((key (concatenate 'string
