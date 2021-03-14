@@ -29,12 +29,27 @@
     (gtk "gtk_server_exit")
     (setq gtk-continue-main-loop nil))
 
+  (defun gtk-server-toolkit ()
+    (gtk "gtk_server_toolkit"))
+
+  (defun gtk-server-version ()
+    (gtk "gtk_server_version"))
+  
   (defun start-gtk ()
     (setf gtk-proc (uiop:launch-program (list "gtk-server" "-stdin")
 					:input :stream
 					:output :stream))
-    (gtk "gtk_init" nil nil))
+    (if (equalp (gtk-server-toolkit) "GTK3")
+	(gtk "gtk_init" nil nil)
+	nil))
 
+  (defun callback-value (arg-num string-p)
+    (gtk "gtk_server_callback_value"
+	 arg-num
+	 (if string-p
+	     'STRING
+	     'INT)))
+  
   (let ((widget-actions '()))
     
     (defun bind-default (widget action)
@@ -55,9 +70,9 @@
 
     (defun bind (widget signal action)
       (let ((key (concatenate 'string
-			widget
-			"-"
-			signal)))
+			      widget
+			      "-"
+			      signal)))
 	(push (cons key action) widget-actions)
 	(gtk "gtk_server_connect"
 	     widget
@@ -67,11 +82,26 @@
     (defun unbind-default (widget)
       (setq widget-actions (remove widget widget-actions :key #'car :test #'equalp)))
 
+    (defun unbind (widget signal)
+      (let ((key (concatenate 'string
+			      widget
+			      "-"
+			      signal)))
+	(gtk "gtk_server_disconnect" widget signal)
+	(setq widget-actions (remove key widget-actions :key #'car :test #'equalp))))
+
     (defun list-actions ()
       (print widget-actions))
     
     (defun bound-action (widget)
       (cdr (assoc widget widget-actions :test #'equalp))))
+
+  (defun mouse-position ()
+    (cons (read-from-string (gtk "gtk_server_mouse" 0))
+	  (read-from-string (gtk "gtk_server_mouse" 1))))
+
+  (defun mouse-button-down ()
+    (read-from-string (gtk "gtk_server_mouse" 2)))
 
   (defun main-loop ()
     (setq gtk-continue-main-loop t)
